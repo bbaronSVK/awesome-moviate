@@ -3,20 +3,10 @@ import pandas as pd
 import os
 from tqdm import tqdm
 
-openai_key = os.environ.get("OPENAI_API_KEY", "")
 weaviate_url = os.environ.get("WEAVIATE_URL", "")
-weaviate_key = os.environ.get("WEAVIATE_API_KEY", "")
-
-auth_config = weaviate.AuthApiKey(api_key=weaviate_key)
 
 # Setting up client
-client = weaviate.Client(
-    url = weaviate_url,
-    auth_client_secret=auth_config,
-    additional_headers={
-         "X-OpenAI-Api-Key": openai_key, # Replace with your OpenAI key
-    }
-    )
+client = weaviate.Client("http://localhost:8080")
 
 # Load and prepare dataset
 df=pd.read_csv("./data/movie_data.csv", 
@@ -52,12 +42,12 @@ for schema in current_schemas:
 movie_class_schema = {
     "class": "Movies",
     "description": "A collection of movies since 1970.",
-    "vectorizer": "text2vec-openai",
+    "vectorizer": "text2vec-transformers",
     "vectorIndexConfig" : {
         "distance" : "cosine",
     },
     "moduleConfig": {
-        "text2vec-openai": {
+        "text2vec-transformers": {
             "vectorizeClassName": False,
             "model": "ada",
             "modelVersion": "002",
@@ -72,7 +62,7 @@ movie_class_schema["properties"] = [
             "dataType": ["number"],
             "description": "The id of the movie", 
             "moduleConfig": {
-                "text2vec-openai": {  
+                "text2vec-transformers": {  
                     "skip" : True,
                     "vectorizePropertyName" : False
                 }
@@ -83,7 +73,7 @@ movie_class_schema["properties"] = [
             "dataType": ["text"],
             "description": "The name of the movie", 
             "moduleConfig": {
-                "text2vec-openai": {  
+                "text2vec-transformers": {  
                     "skip" : True,
                     "vectorizePropertyName" : False
                 }
@@ -94,7 +84,7 @@ movie_class_schema["properties"] = [
             "dataType": ["number"],
             "description": "The year in which movie was published", 
             "moduleConfig": {
-                "text2vec-openai": {  
+                "text2vec-transformers": {  
                     "skip" : True,
                     "vectorizePropertyName" : False
                 }
@@ -105,7 +95,7 @@ movie_class_schema["properties"] = [
             "dataType": ["text"],
             "description": "The poster link of the movie", 
             "moduleConfig": {
-                "text2vec-openai": {  
+                "text2vec-transformers": {  
                     "skip" : True,
                     "vectorizePropertyName" : False
                 }
@@ -116,7 +106,7 @@ movie_class_schema["properties"] = [
             "dataType": ["text"],
             "description": "The genres of the movie",
             "moduleConfig": {
-                "text2vec-openai": {  
+                "text2vec-transformers": {  
                     "skip" : True,
                     "vectorizePropertyName" : False
                 }
@@ -127,7 +117,7 @@ movie_class_schema["properties"] = [
             "dataType": ["text"],
             "description": "The actors of the movie", 
             "moduleConfig": {
-                "text2vec-openai": {  
+                "text2vec-transformers": {  
                     "skip" : True,
                     "vectorizePropertyName" : False
                 }
@@ -138,7 +128,7 @@ movie_class_schema["properties"] = [
             "dataType": ["text"],
             "description": "Director of the movie",
             "moduleConfig": {
-                "text2vec-openai": {  
+                "text2vec-transformers": {  
                     "skip" : True,
                     "vectorizePropertyName" : False
                 }
